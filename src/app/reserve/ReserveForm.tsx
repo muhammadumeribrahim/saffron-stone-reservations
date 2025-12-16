@@ -2,16 +2,28 @@
 
 import { useActionState } from "react";
 import { submitReservation, type ReserveFormState } from "./actions";
+import { buildTimeSlots, formatTime12h } from "@/lib/booking/slots";
 
 const initialState: ReserveFormState = { ok: true };
 
 function FieldError({ message }: { message?: string }) {
   if (!message) return null;
-  return <p className="mt-1 text-sm text-red-600">{message}</p>;
+  return <p className="mt-1 text-sm text-rose-600">{message}</p>;
+}
+
+function todayISODate() {
+  const d = new Date();
+  const yyyy = d.getFullYear();
+  const mm = String(d.getMonth() + 1).padStart(2, "0");
+  const dd = String(d.getDate()).padStart(2, "0");
+  return `${yyyy}-${mm}-${dd}`;
 }
 
 export default function ReserveForm() {
   const [state, formAction, isPending] = useActionState(submitReservation, initialState);
+
+  const slots = buildTimeSlots();
+  const minDate = todayISODate();
 
   return (
     <form action={formAction} className="space-y-5">
@@ -21,7 +33,7 @@ export default function ReserveForm() {
           <input
             name="customerName"
             required
-            className="mt-1 w-full rounded-md border px-3 py-2"
+            className="mt-1 w-full rounded-2xl border border-zinc-900/10 bg-white/70 px-4 py-3 text-sm outline-none"
           />
           <FieldError message={state.fieldErrors?.customerName} />
         </div>
@@ -32,7 +44,7 @@ export default function ReserveForm() {
             name="customerEmail"
             type="email"
             required
-            className="mt-1 w-full rounded-md border px-3 py-2"
+            className="mt-1 w-full rounded-2xl border border-zinc-900/10 bg-white/70 px-4 py-3 text-sm outline-none"
           />
           <FieldError message={state.fieldErrors?.customerEmail} />
         </div>
@@ -41,7 +53,7 @@ export default function ReserveForm() {
           <label className="block text-sm font-medium">Phone (optional)</label>
           <input
             name="customerPhone"
-            className="mt-1 w-full rounded-md border px-3 py-2"
+            className="mt-1 w-full rounded-2xl border border-zinc-900/10 bg-white/70 px-4 py-3 text-sm outline-none"
           />
         </div>
 
@@ -54,7 +66,7 @@ export default function ReserveForm() {
             max={20}
             defaultValue={2}
             required
-            className="mt-1 w-full rounded-md border px-3 py-2"
+            className="mt-1 w-full rounded-2xl border border-zinc-900/10 bg-white/70 px-4 py-3 text-sm outline-none"
           />
           <FieldError message={state.fieldErrors?.partySize} />
         </div>
@@ -64,26 +76,36 @@ export default function ReserveForm() {
           <input
             name="requestedDate"
             type="date"
+            min={minDate}
             required
-            className="mt-1 w-full rounded-md border px-3 py-2"
+            className="mt-1 w-full rounded-2xl border border-zinc-900/10 bg-white/70 px-4 py-3 text-sm outline-none"
           />
           <FieldError message={state.fieldErrors?.requestedDate} />
         </div>
 
         <div>
           <label className="block text-sm font-medium">Time</label>
-          <input
+          <select
             name="requestedTime"
-            type="time"
             required
-            className="mt-1 w-full rounded-md border px-3 py-2"
-          />
+            defaultValue=""
+            className="mt-1 w-full rounded-2xl border border-zinc-900/10 bg-white/70 px-4 py-3 text-sm outline-none"
+          >
+            <option value="" disabled>
+              Select a time
+            </option>
+            {slots.map((t) => (
+              <option key={t} value={t}>
+                {formatTime12h(t)}
+              </option>
+            ))}
+          </select>
           <FieldError message={state.fieldErrors?.requestedTime} />
         </div>
       </div>
 
       {state.message ? (
-        <p className={state.ok ? "text-sm text-gray-600" : "text-sm text-red-600"}>
+        <p className={state.ok ? "text-sm text-zinc-600" : "text-sm text-rose-600"}>
           {state.message}
         </p>
       ) : null}
@@ -91,7 +113,7 @@ export default function ReserveForm() {
       <button
         type="submit"
         disabled={isPending}
-        className="rounded-md bg-black px-4 py-2 text-white hover:opacity-90 disabled:opacity-60"
+        className="btn-primary rounded-2xl px-5 py-3 text-sm font-semibold disabled:opacity-60"
       >
         {isPending ? "Submitting..." : "Request Reservation"}
       </button>

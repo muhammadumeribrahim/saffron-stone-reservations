@@ -13,23 +13,43 @@ export default async function ReserveSuccessPage({
   const code = Array.isArray(raw) ? raw[0] : raw ?? "";
 
   return (
-    <main className="mx-auto max-w-2xl px-4 py-10">
-      <h1 className="text-3xl font-semibold">Request Received</h1>
-      <p className="mt-2 text-gray-600">Your reservation request is pending review.</p>
+    <section className="mx-auto max-w-3xl">
+      <div className="glass p-8 md:p-12">
+        <h1 className="text-4xl font-semibold tracking-tight">Request received</h1>
+        <p className="mt-3 text-zinc-600">
+          Your reservation request is now pending review.
+        </p>
 
-      <div className="mt-6 rounded-xl border p-6">
-        <p className="text-sm text-gray-600">Confirmation Code</p>
-        <p className="mt-2 text-2xl font-mono">{code || "—"}</p>
+        <div className="mt-8 rounded-3xl border border-zinc-900/10 bg-white/60 p-6">
+          <p className="text-sm text-zinc-600">Confirmation Code</p>
+          <p className="mt-2 text-3xl font-mono">{code || "—"}</p>
 
-        {code ? (
-          <Link
-            href={`/reservation/${encodeURIComponent(code)}`}
-            className="mt-4 inline-block rounded-md border px-4 py-2 text-sm hover:bg-gray-50"
-          >
-            Check status
-          </Link>
-        ) : null}
+          <div className="mt-6 flex flex-wrap gap-3">
+            {code ? (
+              <Link
+                href={`/reservation/${encodeURIComponent(code)}`}
+                className="btn-primary rounded-xl px-5 py-3 text-sm font-semibold"
+              >
+                View status
+              </Link>
+            ) : null}
+
+            <Link
+              href="/reserve"
+              className="btn-ghost rounded-xl px-5 py-3 text-sm font-semibold"
+            >
+              Book another
+            </Link>
+
+            <Link
+              href="/"
+              className="btn-ghost rounded-xl px-5 py-3 text-sm font-semibold"
+            >
+              Back home
+            </Link>
+          </div>
+        </div>
       </div>
-    </main>
+    </section>
   );
 }
