@@ -9,59 +9,80 @@ export default function AdminLoginForm() {
   const [signInState, signInAction, signInPending] = useActionState(adminSignIn, initial);
 
   return (
-    <div className="relative mx-auto max-w-xl">
-      {/* Background restaurant name */}
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute left-1/2 top-1/2 w-[1200px] -translate-x-1/2 -translate-y-1/2 rotate-[-12deg] text-center text-[90px] font-semibold tracking-tight text-zinc-900/5 md:text-[120px]">
-          Saffron &amp; Stone
-        </div>
-      </div>
-
-      <div className="glass relative p-8 md:p-10">
-        <div className="inline-flex items-center gap-2 rounded-full border border-zinc-900/10 bg-white/60 px-3 py-1 text-xs text-zinc-700">
-          Staff portal
-        </div>
-
-        <h1 className="mt-4 text-3xl font-semibold tracking-tight">Admin Login</h1>
-        <p className="mt-2 text-sm text-zinc-600">
+    <div className="mx-auto w-full max-w-md">
+      <div className="mb-6">
+        <h1 className="text-3xl font-semibold text-neutral-900">Admin Login</h1>
+        <p className="mt-2 text-sm text-neutral-700">
           Sign in to manage reservation requests.
         </p>
+      </div>
 
-        <form action={signInAction} className="mt-8 space-y-4">
-          <div>
-            <label className="block text-sm font-medium">Email</label>
-            <input
-              name="email"
-              type="email"
-              required
-              className="mt-1 w-full rounded-2xl border border-zinc-900/10 bg-white/70 px-4 py-3 text-sm outline-none"
-            />
+      <div className="relative overflow-hidden rounded-3xl border border-neutral-900/15 bg-white/45 p-6 shadow-[0_30px_80px_-50px_rgba(0,0,0,0.35)] backdrop-blur-xl">
+        {/* Watermark (fixed: never clipped on mobile/desktop) */}
+        <div aria-hidden className="pointer-events-none absolute inset-0">
+          <div className="absolute left-1/2 top-1/2 w-[92%] -translate-x-1/2 -translate-y-1/2 rotate-[-10deg] text-center">
+            <div
+              className="select-none font-extrabold leading-[0.9] tracking-tight text-neutral-900/10"
+              style={{ fontSize: "clamp(44px, 6vw, 120px)" }}
+            >
+              <div>Saffron</div>
+              <div>&amp; Stone</div>
+            </div>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium">Password</label>
-            <input
-              name="password"
-              type="password"
-              required
-              className="mt-1 w-full rounded-2xl border border-zinc-900/10 bg-white/70 px-4 py-3 text-sm outline-none"
-            />
-          </div>
+          {/* soft glow wash */}
+          <div className="absolute inset-0 bg-gradient-to-br from-rose-200/35 via-amber-100/20 to-sky-200/35" />
+        </div>
 
-          {signInState.message ? (
-            <p className={signInState.ok ? "text-sm text-zinc-600" : "text-sm text-rose-600"}>
-              {signInState.message}
-            </p>
-          ) : null}
+        {/* Foreground content */}
+        <div className="relative">
+          <form action={signInAction} className="space-y-4">
+            <div className="inline-flex items-center gap-2 rounded-full border border-white/40 bg-white/55 px-3 py-1 text-xs font-medium text-neutral-800 backdrop-blur">
+              Staff portal
+            </div>
 
-          <button
-            type="submit"
-            disabled={signInPending}
-            className="btn-primary w-full rounded-2xl px-4 py-3 text-sm font-semibold disabled:opacity-60"
-          >
-            {signInPending ? "Signing in..." : "Sign in"}
-          </button>
-        </form>
+            <div className="pt-1">
+              <h2 className="text-3xl font-semibold text-neutral-900">Admin Login</h2>
+              <p className="mt-2 text-sm text-neutral-700">
+                Sign in to manage reservation requests.
+              </p>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-neutral-900">Email</label>
+              <input
+                name="email"
+                type="email"
+                required
+                className="mt-1 w-full rounded-2xl border border-neutral-900/15 bg-white/70 px-4 py-3 text-sm outline-none ring-0 placeholder:text-neutral-500 focus:border-neutral-900/25"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-neutral-900">Password</label>
+              <input
+                name="password"
+                type="password"
+                required
+                className="mt-1 w-full rounded-2xl border border-neutral-900/15 bg-white/70 px-4 py-3 text-sm outline-none ring-0 placeholder:text-neutral-500 focus:border-neutral-900/25"
+              />
+            </div>
+
+            {signInState.message ? (
+              <p className={signInState.ok ? "text-sm text-neutral-700" : "text-sm text-red-600"}>
+                {signInState.message}
+              </p>
+            ) : null}
+
+            <button
+              type="submit"
+              disabled={signInPending}
+              className="w-full rounded-2xl bg-neutral-900 px-4 py-3 text-sm font-medium text-white shadow-sm hover:opacity-95 disabled:opacity-60"
+            >
+              {signInPending ? "Signing in..." : "Sign in"}
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   );
